@@ -18,8 +18,9 @@
   Mappers can take custom key functions for encode and decode, constructed using
   `->encode-key-fn` and `->decode-key-fn`:
 
-    (require '[camel-snake-kebab.core :refer [->snake_case_string]])
-    (let [{keys [->json <-json]}
+    (require '[camel-snake-kebab.core :refer [->snake_case_string
+                                              ->kebab-case-keyword]])
+    (let [{:keys [->json <-json]}
           (jason/new-json-mappers
             {:encode-key-fn (jason/->encode-key-fn ->snake_case_string)
              :decode-key-fn (jason/->decode-key-fn ->kebab-case-keyword)})]
@@ -28,6 +29,7 @@
 
       (<-json \"{\\\"last_name\\\": \\\"Jacobs\\\"}\")
       ;; => {:last-name \"Jacobs\"}
+      )
 
   TODO: document meta handling
   TODO: document additional options
