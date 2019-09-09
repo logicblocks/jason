@@ -1,4 +1,4 @@
-(defproject b-social/jason "0.0.2-SNAPSHOT"
+(defproject b-social/jason "0.0.2"
   :description "Factory functions around jsonista, mostly for key conversion."
   :url "https://github.com/b-social/jason"
 
