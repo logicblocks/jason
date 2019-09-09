@@ -5,10 +5,11 @@
   :license {:name "The MIT License"
             :url  "https://opensource.org/licenses/MIT"}
 
-  :dependencies [[metosin/jsonista "0.2.2"]
-                 [com.fasterxml.jackson.datatype/jackson-datatype-joda "2.9.5"]
-                 [cheshire "5.9.0"]
-                 [camel-snake-kebab "672421b575737c5496b7ddcfb83cf150b0d0bc75"]]
+  :dependencies
+  [[metosin/jsonista "0.2.2"]
+   [com.fasterxml.jackson.datatype/jackson-datatype-joda "2.9.9"]
+   [com.fasterxml.jackson.datatype/jackson-datatype-jsr310 "2.9.9"]
+   [camel-snake-kebab "672421b575737c5496b7ddcfb83cf150b0d0bc75"]]
 
   :middleware [lein-git-down.plugin/inject-properties]
 
@@ -24,7 +25,7 @@
             [reifyhealth/lein-git-down "0.3.5"]]
 
   :profiles {:shared {:dependencies
-                      [[org.clojure/clojure "1.10.0"]
+                      [[org.clojure/clojure "1.10.1"]
                        [clj-time "0.15.2"]
                        [eftest "0.5.8"]]}
              :dev    [:shared {:source-paths ["dev"]
@@ -36,6 +37,7 @@
 
   :codox
   {:namespaces  [#"^jason\."]
+   :metadata    {:doc/format :markdown}
    :output-path "docs"
    :source-uri  "https://github.com/b-social/jason/blob/{version}/{filepath}#L{line}"}
 
@@ -69,7 +71,5 @@
                          ["check"]
                          ["kibit" "--replace"]
                          ["cljfmt" "fix"]
-                         ["bikeshed"
-                          "--name-collisions" "false"
-                          "--verbose" "true"]
+                         ["with-profile" "test" "bikeshed" "--verbose" "true"]
                          ["test"]]})

@@ -8,8 +8,18 @@ and this project adheres to
 
 
 ## [Unreleased]
+### Added
+- Factory function for creating mappers.
+- Macro for defining mappers in a namespace. 
+- Better meta key handling which uses standard key conversion while retaining 
+  meta indicator.
+- Support for all of `org.joda.time` and `java.time`.
+
 ### Changed
 - Use `jsonista` for underlying JSON support.
+
+### Removed
+- Concrete mappers for `wire` and `db` types.
 
 ## [0.0.1] — 2019-09-09
 Released without _CHANGELOG.md_.
