@@ -71,5 +71,7 @@
                          ["check"]
                          ["kibit" "--replace"]
                          ["cljfmt" "fix"]
-                         ["with-profile" "test" "bikeshed" "--verbose" "true"]
+                         ["with-profile" "test" "bikeshed"
+                          "--max-line-length" "200"
+                          "--verbose" "true"]
                          ["test"]]})

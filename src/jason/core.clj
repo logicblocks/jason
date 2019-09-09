@@ -4,32 +4,32 @@
 
   Mapper functions are constructed as:
 
-    (require '[jason.core :as jason])
-    (let [{:keys [->json <-json]} (jason/new-json-mappers)]
-      (->json {:first-name \"Jess\"})
-      ;; => \"{\\\"firstName\\\": \\\"Jess\\\"}\"
+      (require '[jason.core :as jason])
+      (let [{:keys [->json <-json]} (jason/new-json-mappers)]
+        (->json {:first-name \"Jess\"})
+        ;; => \"{\\\"firstName\\\": \\\"Jess\\\"}\"
 
-      (<-json \"{\\\"lastName\\\": \\\"Jacobs\\\"}\")
-      ;; => {:last-name \"Jacobs\"}
-      )
+        (<-json \"{\\\"lastName\\\": \\\"Jacobs\\\"}\")
+        ;; => {:last-name \"Jacobs\"}
+        )
 
   ### Configuration
 
   Mappers can take custom key functions for encode and decode, constructed using
   `->encode-key-fn` and `->decode-key-fn`:
 
-    (require '[camel-snake-kebab.core :refer [->snake_case_string
-                                              ->kebab-case-keyword]])
-    (let [{:keys [->json <-json]}
-          (jason/new-json-mappers
-            {:encode-key-fn (jason/->encode-key-fn ->snake_case_string)
-             :decode-key-fn (jason/->decode-key-fn ->kebab-case-keyword)})]
-      (->json {:first-name \"Jess\"})
-      ;; => \"{\\\"first_name\\\": \\\"Jess\\\"}\"
+      (require '[camel-snake-kebab.core :refer [->snake_case_string
+                                                ->kebab-case-keyword]])
+      (let [{:keys [->json <-json]}
+            (jason/new-json-mappers
+              {:encode-key-fn (jason/->encode-key-fn ->snake_case_string)
+               :decode-key-fn (jason/->decode-key-fn ->kebab-case-keyword)})]
+        (->json {:first-name \"Jess\"})
+        ;; => \"{\\\"first_name\\\": \\\"Jess\\\"}\"
 
-      (<-json \"{\\\"last_name\\\": \\\"Jacobs\\\"}\")
-      ;; => {:last-name \"Jacobs\"}
-      )
+        (<-json \"{\\\"last_name\\\": \\\"Jacobs\\\"}\")
+        ;; => {:last-name \"Jacobs\"}
+        )
 
   TODO: document meta handling
   TODO: document additional options
@@ -90,10 +90,10 @@
 
   Also accepts a map option argument in place of the function which can contain:
 
-    :standard-key-fn  the key function to use for standard fields, also used
-                      for meta fields if no :meta-key-fn provided.
-    :meta-key-fn      the key function to use for meta fields, overriding all
-                      meta handling."
+    - `:standard-key-fn`  the key function to use for standard fields, also used
+                          for meta fields if no :meta-key-fn provided.
+    - `:meta-key-fn`      the key function to use for meta fields, overriding
+                          all meta handling."
   ([] (->encode-key-fn {}))
   ([fn-or-opts]
     (->key-fn
@@ -111,10 +111,10 @@
 
   Also accepts a map option argument in place of the function which can contain:
 
-    :standard-key-fn  the key function to use for standard fields, also used
-                      for meta fields if no :meta-key-fn provided.
-    :meta-key-fn      the key function to use for meta fields, overriding all
-                      meta handling."
+    - `:standard-key-fn`  the key function to use for standard fields, also used
+                          for meta fields if no :meta-key-fn provided.
+    - `:meta-key-fn`      the key function to use for meta fields, overriding
+                          all meta handling."
   ([] (->decode-key-fn {}))
   ([fn-or-opts]
     (->key-fn
@@ -138,17 +138,11 @@
 
   | Encoding options    |                                                     |
   | ------------------- | --------------------------------------------------- |
-  | `:pretty`           | set to true use Jackson's pretty-printing defaults
-                          (default: true) |
+  | `:pretty`           | set to true use Jackson's pretty-printing defaults (default: true) |
   | `:escape-non-ascii` | set to true to escape non ascii characters |
-  | `:date-format`      | string for custom date formatting
-                          (default: `yyyy-MM-dd'T'HH:mm:ss'Z'`) |
-  | `:encode-key-fn`    | true to coerce keyword keys to strings, false to
-                          leave them as keywords, or a function to provide
-                          custom coercion
-                          (default: the default of `->encode-key-fn`) |
-  | `:encoders`         | a map of custom encoders where keys should be types
-                          and values should be encoder functions |
+  | `:date-format`      | string for custom date formatting (default: `yyyy-MM-dd'T'HH:mm:ss'Z'`) |
+  | `:encode-key-fn`    | true to coerce keyword keys to strings, false to leave them as keywords, or a function to provide custom coercion (default: the default of `->encode-key-fn`) |
+  | `:encoders`         | a map of custom encoders where keys should be types and values should be encoder functions |
 
   Encoder functions take two parameters: the value to be encoded and a
   JsonGenerator object. The function should call JsonGenerator methods to emit
@@ -156,12 +150,8 @@
 
   | Decoding options    |                                                     |
   | ------------------- | --------------------------------------------------- |
-  | `:decode-key-fn`    |  true to coerce keys to keywords, false to leave
-                           them as strings, or a function to provide custom
-                           coercion
-                           (default: the default of `->decode-key-fn`) |
-  | `:bigdecimals`      |  true to decode doubles as BigDecimals
-                           (default: false) |
+  | `:decode-key-fn`    |  true to coerce keys to keywords, false to leave them as strings, or a function to provide custom coercion (default: the default of `->decode-key-fn`) |
+  | `:bigdecimals`      |  true to decode doubles as BigDecimals (default: false) |
 
   See https://metosin.github.io/jsonista/jsonista.core.html#var-object-mapper
   for further details of the underlying JSON library, `jsonista`."
