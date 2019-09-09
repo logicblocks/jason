@@ -6,6 +6,7 @@
             :url  "https://opensource.org/licenses/MIT"}
 
   :dependencies [[metosin/jsonista "0.2.2"]
+                 [com.fasterxml.jackson.datatype/jackson-datatype-joda "2.9.5"]
                  [cheshire "5.9.0"]
                  [camel-snake-kebab "672421b575737c5496b7ddcfb83cf150b0d0bc75"]]
 
@@ -24,6 +25,7 @@
 
   :profiles {:shared {:dependencies
                       [[org.clojure/clojure "1.10.0"]
+                       [clj-time "0.15.2"]
                        [eftest "0.5.8"]]}
              :dev    [:shared {:source-paths ["dev"]
                                :eftest       {:multithread? false}}]

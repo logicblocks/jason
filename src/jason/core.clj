@@ -2,13 +2,13 @@
   (:require
     [clojure.string :refer [starts-with?]]
 
-    [cheshire.core :as json]
-    [cheshire.generate :refer [add-encoder]]
+    [jsonista.core :as jsonista]
 
     [camel-snake-kebab.core
      :refer [->camelCaseString
              ->snake_case_string
-             ->kebab-case-keyword]]))
+             ->kebab-case-keyword]])
+  (:import [com.fasterxml.jackson.datatype.joda JodaModule]))
 
 (defn- if-metadata
   [key-fn case-key-fn]
@@ -19,16 +19,25 @@
 
 (defn json->map [string options]
   (let [meta-key-fn (or (:meta-key-fn options) keyword)
-        standard-key-fn (or (:standard-key-fn options) ->kebab-case-keyword)]
-    (json/parse-string string
-      (if-metadata meta-key-fn standard-key-fn))))
+        standard-key-fn (or (:standard-key-fn options) ->kebab-case-keyword)
+        key-fn (if-metadata meta-key-fn standard-key-fn)
+
+        mapper (jsonista/object-mapper
+                 {:decode-key-fn key-fn
+                  :modules       [(JodaModule.)]
+                  :pretty        true})]
+    (jsonista/read-value string mapper)))
 
 (defn map->json [m options]
   (let [meta-key-fn (or (:meta-key-fn options) name)
-        standard-key-fn (or (:standard-key-fn options) ->camelCaseString)]
-    (json/generate-string m
-      {:key-fn (if-metadata meta-key-fn standard-key-fn)
-       :pretty true})))
+        standard-key-fn (or (:standard-key-fn options) ->camelCaseString)
+        key-fn (if-metadata meta-key-fn standard-key-fn)
+
+        mapper (jsonista/object-mapper
+                 {:encode-key-fn key-fn
+                  :modules       [(JodaModule.)]
+                  :pretty        true})]
+    (jsonista/write-value-as-string m mapper)))
 
 (defn wire-json->map [string & {:as options}]
   (json->map string options))

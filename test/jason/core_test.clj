@@ -3,6 +3,8 @@
     [clojure.test :refer :all]
     [clojure.string :as string]
 
+    [clj-time.core :as time]
+
     [camel-snake-kebab.core
      :refer [->camelCaseString]]
 
@@ -37,13 +39,13 @@
               "}")
             (jason/map->wire-json {:key 123}))))
 
-    #_(testing "converts dates"
+    (testing "converts dates"
       (is (=
             (long-str
               "{"
               "  \"key\" : \"2019-02-03T00:00:00.000Z\""
               "}")
-            (jason/map->wire-json {:key (date/date-time 2019 2 3)}))))
+            (jason/map->wire-json {:key (time/date-time 2019 2 3)}))))
 
     (testing "converts keys to kebab case"
       (is (=
@@ -102,13 +104,13 @@
               "}")
             (jason/map->db-json {:key 123}))))
 
-    #_(testing "converts dates"
+    (testing "converts dates"
       (is (=
             (long-str
               "{"
               "  \"key\" : \"2019-02-03T00:00:00.000Z\""
               "}")
-            (jason/map->db-json {:key (date/date-time 2019 2 3)}))))
+            (jason/map->db-json {:key (time/date-time 2019 2 3)}))))
 
     (testing "converts keys to snake case"
       (is (=
