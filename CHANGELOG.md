@@ -8,6 +8,8 @@ and this project adheres to
 
 
 ## [Unreleased]
+### Added
+- Better handling of `nil` on encode and `nil`/`""` on decode.
 
 ## [0.1.1] — 2019-09-10
 ### Fixed

@@ -138,18 +138,28 @@
 (defn new-json-encoder
   "Constructs a JSON encoder function. With no argument, uses the default
   object mapper defined in [[*default-object-mapper*]]. Optionally, takes
-  an `ObjectMapper` to use instead."
+  an `ObjectMapper` to use instead.
+
+  The returned encoder returns nil on a nil value, otherwise JSON encodes it."
   ([] (new-json-encoder (new-object-mapper)))
   ([object-mapper]
-    (fn [value] (jsonista/write-value-as-string value object-mapper))))
+    (fn [value]
+      (when value
+        (jsonista/write-value-as-string value object-mapper)))))
 
 (defn new-json-decoder
   "Constructs a JSON decoder function. With no argument, uses the default
   object mapper defined in [[*default-object-mapper*]]. Optionally, takes
-  an `ObjectMapper` to use instead."
+  an `ObjectMapper` to use instead.
+
+  The returned decoder returns nil on a nil or empty string value, otherwise
+  JSON decodes it."
   ([] (new-json-decoder (new-object-mapper)))
   ([object-mapper]
-    (fn [value] (jsonista/read-value value object-mapper))))
+    (fn [value]
+      (when value
+        (when-not (and (string? value) (empty? value))
+          (jsonista/read-value value object-mapper))))))
 
 (defn new-json-coders
   "Constructs a pair of JSON encode / decode functions, at keys `:->json` and

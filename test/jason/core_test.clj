@@ -109,6 +109,136 @@
       (is (= :_some_field (key-fn "_someField")))
       (is (= :_some_other_field (key-fn "_someOtherField"))))))
 
+(deftest new-json-encoder
+  (testing "constructs a default encoder when no object mapper passed"
+    (let [->json (jason/new-json-encoder)]
+      (testing "returns nil when nil provided"
+        (is (nil? (->json nil))))
+
+      (testing "returns a json string"
+        (is (= (multiline-str
+                 "{"
+                 "  \"key\" : 123"
+                 "}")
+              (->json {:key 123}))))
+
+      (testing "converts keys to camel case"
+        (is (= (multiline-str
+                 "{"
+                 "  \"someKey\" : 123"
+                 "}")
+              (->json {:some-key 123}))))
+
+      (testing "preserves meta keys"
+        (is (= (multiline-str
+                 "{"
+                 "  \"_someKey\" : 123"
+                 "}")
+              (->json {:_some-key 123}))))
+
+      (testing "converts joda dates"
+        (is (= (multiline-str
+                 "{"
+                 "  \"key\" : \"2019-02-03T00:00:00.000Z\""
+                 "}")
+              (->json {:key (time/date-time 2019 2 3)}))))
+
+      (testing "converts java.time dates"
+        (let [date-time (ZonedDateTime/of 2019 2 3 0 0 0 0 ZoneOffset/UTC)]
+          (is (= (multiline-str
+                   "{"
+                   "  \"key\" : \"2019-02-03T00:00:00Z\""
+                   "}")
+                (->json {:key date-time})))))))
+
+  (testing "uses the specified object mapper when provided"
+    (let [object-mapper (jason/new-object-mapper
+                          {:encode-key-fn
+                           (jason/->encode-key-fn ->snake_case_string)})
+          ->json (jason/new-json-encoder object-mapper)]
+      (testing "returns nil when nil provided"
+        (is (nil? (->json nil))))
+
+      (testing "returns a json string"
+        (is (= (multiline-str
+                 "{"
+                 "  \"key\" : 123"
+                 "}")
+              (->json {:key 123}))))
+
+      (testing "converts keys to snake case"
+        (is (= (multiline-str
+                 "{"
+                 "  \"some_key\" : 123"
+                 "}")
+              (->json {:some-key 123}))))
+
+      (testing "preserves meta keys"
+        (is (= (multiline-str
+                 "{"
+                 "  \"_some_key\" : 123"
+                 "}")
+              (->json {:_some-key 123}))))
+
+      (testing "converts joda dates"
+        (is (= (multiline-str
+                 "{"
+                 "  \"key\" : \"2019-02-03T00:00:00.000Z\""
+                 "}")
+              (->json {:key (time/date-time 2019 2 3)}))))
+
+      (testing "converts java.time dates"
+        (let [date-time (ZonedDateTime/of 2019 2 3 0 0 0 0 ZoneOffset/UTC)]
+          (is (= (multiline-str
+                   "{"
+                   "  \"key\" : \"2019-02-03T00:00:00Z\""
+                   "}")
+                (->json {:key date-time}))))))))
+
+(deftest new-json-decoder
+  (testing "constructs a default decoder when no object mapper passed"
+    (let [<-json (jason/new-json-decoder)]
+      (testing "returns nil when nil provided"
+        (is (nil? (<-json nil))))
+
+      (testing "returns nil when empty string provided"
+        (is (nil? (<-json ""))))
+
+      (testing "parses json"
+        (is (= {:key 123}
+              (<-json "{\"key\": 123}"))))
+
+      (testing "converts keys to kebab case"
+        (is (= {:some-key 123}
+              (<-json "{\"someKey\": 123}"))))
+
+      (testing "preserves keys prefixed with an underscore"
+        (is (= {:_some-links 123}
+              (<-json "{\"_someLinks\": 123}"))))))
+
+  (testing "uses the specified object mapper when provided"
+    (let [object-mapper (jason/new-object-mapper
+                          {:decode-key-fn
+                           (jason/->decode-key-fn ->snake_case_keyword)})
+          <-json (jason/new-json-decoder object-mapper)]
+      (testing "returns nil when nil provided"
+        (is (nil? (<-json nil))))
+
+      (testing "returns nil when empty string provided"
+        (is (nil? (<-json ""))))
+
+      (testing "parses json"
+        (is (= {:key 123}
+              (<-json "{\"key\": 123}"))))
+
+      (testing "converts keys to snake case"
+        (is (= {:some_key 123}
+              (<-json "{\"someKey\": 123}"))))
+
+      (testing "preserves keys prefixed with an underscore"
+        (is (= {:_some_links 123}
+              (<-json "{\"_someLinks\": 123}")))))))
+
 (deftest new-json-coders
   (testing "returns a map with ->json and <-json functions and default key fns"
     (let [{:keys [->json <-json]} (jason/new-json-coders)]
@@ -133,7 +263,7 @@
                    "}")
                 (->json {:key 123}))))
 
-        (testing "converts keys to kebab case"
+        (testing "converts keys to camel case"
           (is (= (multiline-str
                    "{"
                    "  \"someKey\" : 123"
