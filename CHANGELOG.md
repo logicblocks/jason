@@ -8,6 +8,8 @@ and this project adheres to
 
 
 ## [Unreleased]
+
+## [0.1.1] — 2019-09-10
 ### Fixed
 - Incorrect method used for no-args version of `new-json-decoder`.
 
@@ -47,4 +49,5 @@ Released without _CHANGELOG.md_.
 [0.0.3]: https://github.com/b-social/jason/compare/0.0.2...0.0.3
 [0.0.4]: https://github.com/b-social/jason/compare/0.0.3...0.0.4
 [0.1.0]: https://github.com/b-social/jason/compare/0.0.4...0.1.0
-[Unreleased]: https://github.com/b-social/jason/compare/0.1.0...HEAD
+[0.1.1]: https://github.com/b-social/jason/compare/0.1.0...0.1.1
+[Unreleased]: https://github.com/b-social/jason/compare/0.1.1...HEAD
