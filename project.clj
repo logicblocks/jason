@@ -39,6 +39,7 @@
   {:namespaces  [#"^jason\."]
    :metadata    {:doc/format :markdown}
    :output-path "docs"
+   :doc-paths ["docs"]
    :source-uri  "https://github.com/b-social/jason/blob/{version}/{filepath}#L{line}"}
 
   :cljfmt {:indents ^:replace {#".*" [[:inner 0]]}}

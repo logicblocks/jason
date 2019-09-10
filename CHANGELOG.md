@@ -8,6 +8,8 @@ and this project adheres to
 
 
 ## [Unreleased]
+### Added
+- Documentation.
 
 ## [0.0.3] — 2019-09-09
 ### Fixed

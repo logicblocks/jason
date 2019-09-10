@@ -109,9 +109,9 @@
       (is (= :_some_field (key-fn "_someField")))
       (is (= :_some_other_field (key-fn "_someOtherField"))))))
 
-(deftest new-json-mappers
+(deftest new-json-coders
   (testing "returns a map with ->json and <-json functions and default key fns"
-    (let [{:keys [->json <-json]} (jason/new-json-mappers)]
+    (let [{:keys [->json <-json]} (jason/new-json-coders)]
       (testing "for <-json"
         (testing "parses json"
           (is (= {:key 123}
@@ -164,7 +164,7 @@
 
   (testing "uses specified encode key function when provided"
     (let [{:keys [->json]}
-          (jason/new-json-mappers
+          (jason/new-json-coders
             {:encode-key-fn (jason/->encode-key-fn
                               {:standard-key-fn ->snake_case_string})})]
       (is (= (multiline-str
@@ -181,7 +181,7 @@
 
   (testing "uses specified decode key function when provided"
     (let [{:keys [<-json]}
-          (jason/new-json-mappers
+          (jason/new-json-coders
             {:decode-key-fn (jason/->decode-key-fn
                               {:standard-key-fn ->snake_case_keyword})})]
       (testing "converts keys to kebab case"
@@ -196,12 +196,12 @@
   ->database-json
   <-database-json)
 
-(jason/defmappers database
+(jason/defcoders database
   :encode-key-fn (jason/->encode-key-fn ->snake_case_string)
   :decode-key-fn (jason/->decode-key-fn ->kebab-case-keyword))
 
-(deftest defmappers
-  (testing (str "defines mapper functions in the current namespace of the "
+(deftest defcoders
+  (testing (str "defines coder functions in the current namespace of the "
              "provided type")
     (is (= {:key 123} (<-database-json "{\"key\": 123}")))
     (is (= {:some-key 123} (<-database-json "{\"some_key\": 123}")))
