@@ -8,6 +8,8 @@ and this project adheres to
 
 
 ## [Unreleased]
+
+## [0.1.2] — 2019-09-10
 ### Added
 - Better handling of `nil` on encode and `nil`/`""` on decode.
 
@@ -52,4 +54,5 @@ Released without _CHANGELOG.md_.
 [0.0.4]: https://github.com/b-social/jason/compare/0.0.3...0.0.4
 [0.1.0]: https://github.com/b-social/jason/compare/0.0.4...0.1.0
 [0.1.1]: https://github.com/b-social/jason/compare/0.1.0...0.1.1
-[Unreleased]: https://github.com/b-social/jason/compare/0.1.1...HEAD
+[0.1.2]: https://github.com/b-social/jason/compare/0.1.1...0.1.2
+[Unreleased]: https://github.com/b-social/jason/compare/0.1.2...HEAD

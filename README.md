@@ -16,7 +16,7 @@ Supports:
 Add the following to your `project.clj` file:
 
 ```clj
-[b-social/jason "0.1.1"]
+[b-social/jason "0.1.2"]
 ```
 
 ## Documentation
