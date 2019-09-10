@@ -147,7 +147,7 @@
   "Constructs a JSON decoder function. With no argument, uses the default
   object mapper defined in [[*default-object-mapper*]]. Optionally, takes
   an `ObjectMapper` to use instead."
-  ([] (new-json-encoder (new-object-mapper)))
+  ([] (new-json-decoder (new-object-mapper)))
   ([object-mapper]
     (fn [value] (jsonista/read-value value object-mapper))))
 
