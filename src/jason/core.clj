@@ -122,25 +122,34 @@
   JSON library, `jsonista`."
   ([] (new-object-mapper {}))
   ([options]
-   (jsonista/object-mapper
-     (merge
-       {:encode-key-fn (->encode-key-fn)
-        :decode-key-fn (->decode-key-fn)
-        :modules       [(JodaModule.) (JavaTimeModule.)]
-        :pretty        true}
-       options))))
+    (jsonista/object-mapper
+      (merge
+        {:encode-key-fn (->encode-key-fn)
+         :decode-key-fn (->decode-key-fn)
+         :modules       [(JodaModule.) (JavaTimeModule.)]
+         :pretty        true}
+        options))))
+
+(def ^:dynamic *default-object-mapper*
+  "Default ObjectMapper instance used when none provided. Has the same
+  configuration as when [[new-object-mapper]] is called with no argument."
+  (new-object-mapper))
 
 (defn new-json-encoder
-  "Constructs a JSON encoder function using the provided `ObjectMapper`
-  instance."
-  [object-mapper]
-  (fn [value] (jsonista/write-value-as-string value object-mapper)))
+  "Constructs a JSON encoder function. With no argument, uses the default
+  object mapper defined in [[*default-object-mapper*]]. Optionally, takes
+  an `ObjectMapper` to use instead."
+  ([] (new-json-encoder (new-object-mapper)))
+  ([object-mapper]
+    (fn [value] (jsonista/write-value-as-string value object-mapper))))
 
 (defn new-json-decoder
-  "Constructs a JSON decoder function using the provided `ObjectMapper`
-  instance."
-  [object-mapper]
-  (fn [value] (jsonista/read-value value object-mapper)))
+  "Constructs a JSON decoder function. With no argument, uses the default
+  object mapper defined in [[*default-object-mapper*]]. Optionally, takes
+  an `ObjectMapper` to use instead."
+  ([] (new-json-encoder (new-object-mapper)))
+  ([object-mapper]
+    (fn [value] (jsonista/read-value value object-mapper))))
 
 (defn new-json-coders
   "Constructs a pair of JSON encode / decode functions, at keys `:->json` and

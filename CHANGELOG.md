@@ -8,6 +8,10 @@ and this project adheres to
 
 
 ## [Unreleased]
+### Added
+- A `*default-object-mapper*`.
+- No-args versions of `new-json-encoder` and `new-json-decoder` that use the
+  default `ObjectMapper`.
 
 ## [0.0.4] — 2019-09-10
 ### Added
