@@ -8,7 +8,7 @@ key conversion.
 Add the following to your `project.clj` file:
 
 ```clj
-[b-social/jason "0.0.4"]
+[b-social/jason "0.1.0"]
 ```
 
 ## Documentation
