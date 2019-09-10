@@ -3,6 +3,14 @@
 JSON encoding and decoding function construction with support for configurable 
 key conversion.
 
+Supports:
+- conversion from kebab-case keywords to camel case JSON and back again by
+  default
+- correct key conversion for JSON payloads including metadata, 
+  (e.g., as in HAL), indicated by a (configurable) underscore prefix
+- configuration of all key conversions
+- serialisation of `org.joda.time` and `java.time` types
+
 ## Install
 
 Add the following to your `project.clj` file:
@@ -17,38 +25,31 @@ Add the following to your `project.clj` file:
 
 ## Usage
 
-Mapper functions are constructed as:
-
 ```clojure
-(require '[jason.core :as jason])
-(let [{:keys [->json <-json]} (jason/new-json-mappers)]
-  (->json {:first-name "Jess"})
-  ;; => "{\"firstName\": \"Jess\"}"
-
-  (<-json "{\"lastName\": \"Jacobs\"}")
-  ;; => {:last-name "Jacobs"}
-  )
-```
-
-### Configuration
-
-Mappers can take custom key functions for encode and decode, constructed using
-`->encode-key-fn` and `->decode-key-fn`:
-
-```clojure
+(require '[jason.core :refer [defcoders] :as jason])
 (require '[camel-snake-kebab.core :refer [->snake_case_string
-                                          ->kebab-case-keyword]])
-(let [{:keys [->json <-json]}
-      (jason/new-json-mappers
-        {:encode-key-fn (jason/->encode-key-fn ->snake_case_string)
-         :decode-key-fn (jason/->decode-key-fn ->kebab-case-keyword)})]
-  (->json {:first-name "Jess"})
-  ;; => "{\"first_name\": \"Jess\"}"
+                                          ->snake_case_keyword]])
 
-  (<-json "{\"last_name\": \"Jacobs\"}")
-  ;; => {:last-name "Jacobs"}
-  )
+(defcoders wire)
+(defcoders db
+  :encode-key-fn (jason/->encode-key-fn ->snake_case_string)
+  :decode-key-fn (jason/->decode-key-fn ->snake_case_keyword))
+
+(->wire-json {:first-name "Jess"})
+;; => "{\"firstName\": \"Jess\"}"
+
+(->db-json {:first-name "Jess"})
+;; => "{\"first_name\": \"Jess\"}"
+
+(<-wire-json "{\"firstName\": \"Jess\"}")
+;; => {:first-name "Jess"}
+
+(<-db-json "{\"first_name\": \"Jess\"}")
+;; => {:first_name "Jess"}
 ```
+
+See the [Getting Started](https://b-social.github.io/jason/getting-started.html) 
+guide for more details.
 
 ## License
 
