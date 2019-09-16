@@ -8,6 +8,12 @@ and this project adheres to
 
 
 ## [Unreleased]
+### Added
+- `jason.convenience` namespace with convenience coders for wire and db JSON. 
+
+### Changed
+- The default object mapper no longer performs key conversion, no longer
+  pretty prints and no longer supports converting dates.
 
 ## [0.1.2] — 2019-09-10
 ### Added

@@ -23,14 +23,14 @@ To build an encoder and decoder:
 (def <-default-json (jason/new-json-decoder default-object-mapper))
 
 (->default-json {:first-name "Jane"})
-;; => "{\n  \"firstName\" : \"Jane\"\n}"
+;; => "{\"first-name\":\"Jane\"}"
 
-(<-default-json "{\n  \"firstName\" : \"Jane\"\n}")
-;; => {:first-name "Jane"}
+(<-default-json "{\"firstName\":\"Jane\"}")
+;; => {"firstName" "Jane"}
 ```
 
-As shown, by default, the encoder will convert keys to camel case strings. 
-The decoder will convert keys to kebab case keywords.
+As shown, by default, the encoder will leave keys untouched during encoding and
+decoding.
 
 ### Basic configuration
 
@@ -50,9 +50,9 @@ To change the conversions:
 (def <-custom-json (jason/new-json-decoder custom-object-mapper))
 
 (->custom-json {:first-name "Jane"})
-;; => "{\n  \"first_name\" : \"Jane\"\n}"
+;; => "{\"first_name\":\"Jane\"}"
 
-(<-custom-json "{\n  \"firstName\" : \"Jane\"\n}")
+(<-custom-json "{\"firstName\":\"Jane\"}")
 ;; => {:first_name "Jane"}
 ```
 
@@ -60,9 +60,9 @@ To change the conversions:
 
 In addition to key conversion for standard keys, `jason` is aware of metadata
 keys. By default these are keys prefixed with an underscore, e.g., `_links`.
-The default key conversion functions and the conversion functions returned by
-`->encode-key-fn` and `->decode-key-fn` convert the key whilst retaining the
-metadata prefix:
+By default metadata keys are left untouched and the conversion functions 
+returned by `->encode-key-fn` and `->decode-key-fn` convert the key whilst 
+retaining the metadata prefix:
 
 ```clojure
 (def default-encode-key-fn (jason/->encode-key-fn))
@@ -119,11 +119,13 @@ returns them in a map, hiding the details of the `ObjectMapper`:
 
 ```clojure
 (let [{:keys [->json <-json]} 
-      (jason/new-json-coders)]
+      (jason/new-json-coders
+        :encode-key-fn (jason/->encode-key-fn)
+        :decode-key-fn (jason/->decode-key-fn))]
   (->json {:first-name "Jess"})
-  ;; => "{\"firstName\": \"Jess\"}"
+  ;; => "{\"firstName\":\"Jess\"}"
 
-  (<-json "{\"lastName\": \"Jacobs\"}")
+  (<-json "{\"lastName\":\"Jacobs\"}")
   ;; => {:last-name "Jacobs"}
   )
 
@@ -132,9 +134,9 @@ returns them in a map, hiding the details of the `ObjectMapper`:
         {:encode-key-fn (jason/->encode-key-fn ->snake_case_string)
          :decode-key-fn (jason/->decode-key-fn ->snake_case_keyword)})]
   (->json {:first-name "Jane"})
-  ;; => "{\n  \"first_name\" : \"Jane\"\n}"
+  ;; => "{\"first_name\":\"Jane\"}"
   
-  (<-json "{\n  \"firstName\" : \"Jane\"\n}")
+  (<-json "{\"firstName\":\"Jane\"}")
   ;; => {:first_name "Jane"}
   )
 ```
@@ -161,11 +163,48 @@ However, for convenience, the `defcoders` macro performs this task for you:
   :decode-key-fn (jason/->decode-key-fn ->snake_case_keyword))
 
 (->db-json {:first-name "Jane"})
-;; => "{\n  \"first_name\" : \"Jane\"\n}"
+;; => "{\"first_name\":\"Jane\"}"
   
-(<-db-json "{\n  \"firstName\" : \"Jane\"\n}")
+(<-db-json "{\"firstName\":\"Jane\"}")
 ;; => {:first_name "Jane"}
 ```
 
 All options that can be passed to `new-json-coders` or `new-object-mapper`
 also apply to `defcoders`.
+
+## Convenience coder functions
+
+`jason` includes convenience coder functions for wire JSON (e.g., from service 
+to service) and database JSON (e.g., for databases that support JSON types).
+
+The wire JSON coders:
+- convert from kebab-case keywords to camelCase JSON and back again
+- includes serialisation of `org.joda.time` and `java.time` types
+
+To use the wire JSON coders:
+
+```clojure
+(require '[jason.convenience :as conv])
+
+(conv/->wire-json {:first-name "Jane"})
+;; => "{\n  \"firstName\" : \"Jane\"\n}"
+  
+(conv/<-wire-json "{\n  \"firstName\" : \"Jane\"\n}")
+;; => {:first-name "Jane"}
+```
+
+The database JSON coders:
+- convert from kebab-case keywords to snake_case JSON and back again
+- includes serialisation of `org.joda.time` and `java.time` types
+
+To use the database JSON coders:
+
+```clojure
+(require '[jason.convenience :as conv])
+
+(conv/->db-json {:first-name "Jane"})
+;; => "{\n  \"first_name\" : \"Jane\"\n}"
+  
+(conv/<-db-json "{\n  \"first_name\" : \"Jane\"\n}")
+;; => {:first-name "Jane"}
+```

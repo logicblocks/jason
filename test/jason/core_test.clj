@@ -1,7 +1,6 @@
 (ns jason.core-test
   (:require
     [clojure.test :refer :all]
-    [clojure.string :as string]
 
     [clj-time.core :as time]
 
@@ -11,11 +10,12 @@
              ->snake_case_keyword
              ->kebab-case-keyword]]
 
-    [jason.core :as jason])
-  (:import [java.time ZonedDateTime ZoneOffset]))
+    [jason.support :refer [multiline-str]]
 
-(defn- multiline-str [& args]
-  (string/join "\n" args))
+    [jason.core :as jason])
+  (:import [java.time ZonedDateTime ZoneOffset]
+    [com.fasterxml.jackson.datatype.joda JodaModule]
+    [com.fasterxml.jackson.datatype.jsr310 JavaTimeModule]))
 
 (deftest ->encode-key-fn
   (testing "converts to camel case string for standard keys by default"
@@ -116,45 +116,23 @@
         (is (nil? (->json nil))))
 
       (testing "returns a json string"
-        (is (= (multiline-str
-                 "{"
-                 "  \"key\" : 123"
-                 "}")
+        (is (= "{\"key\":123}"
               (->json {:key 123}))))
 
-      (testing "converts keys to camel case"
-        (is (= (multiline-str
-                 "{"
-                 "  \"someKey\" : 123"
-                 "}")
+      (testing "keeps keys as provided"
+        (is (= "{\"some-key\":123}"
               (->json {:some-key 123}))))
 
       (testing "preserves meta keys"
-        (is (= (multiline-str
-                 "{"
-                 "  \"_someKey\" : 123"
-                 "}")
-              (->json {:_some-key 123}))))
-
-      (testing "converts joda dates"
-        (is (= (multiline-str
-                 "{"
-                 "  \"key\" : \"2019-02-03T00:00:00.000Z\""
-                 "}")
-              (->json {:key (time/date-time 2019 2 3)}))))
-
-      (testing "converts java.time dates"
-        (let [date-time (ZonedDateTime/of 2019 2 3 0 0 0 0 ZoneOffset/UTC)]
-          (is (= (multiline-str
-                   "{"
-                   "  \"key\" : \"2019-02-03T00:00:00Z\""
-                   "}")
-                (->json {:key date-time})))))))
+        (is (= "{\"_some-key\":123}"
+              (->json {:_some-key 123}))))))
 
   (testing "uses the specified object mapper when provided"
-    (let [object-mapper (jason/new-object-mapper
-                          {:encode-key-fn
-                           (jason/->encode-key-fn ->snake_case_string)})
+    (let [object-mapper
+          (jason/new-object-mapper
+            {:encode-key-fn (jason/->encode-key-fn ->snake_case_string)
+             :modules       [(JodaModule.) (JavaTimeModule.)]
+             :pretty        true})
           ->json (jason/new-json-encoder object-mapper)]
       (testing "returns nil when nil provided"
         (is (nil? (->json nil))))
@@ -205,15 +183,15 @@
         (is (nil? (<-json ""))))
 
       (testing "parses json"
-        (is (= {:key 123}
+        (is (= {"key" 123}
               (<-json "{\"key\": 123}"))))
 
-      (testing "converts keys to kebab case"
-        (is (= {:some-key 123}
+      (testing "keeps keys as provided"
+        (is (= {"someKey" 123}
               (<-json "{\"someKey\": 123}"))))
 
-      (testing "preserves keys prefixed with an underscore"
-        (is (= {:_some-links 123}
+      (testing "preserves meta keys"
+        (is (= {"_someLinks" 123}
               (<-json "{\"_someLinks\": 123}"))))))
 
   (testing "uses the specified object mapper when provided"
@@ -244,69 +222,39 @@
     (let [{:keys [->json <-json]} (jason/new-json-coders)]
       (testing "for <-json"
         (testing "parses json"
-          (is (= {:key 123}
+          (is (= {"key" 123}
                 (<-json "{\"key\": 123}"))))
 
         (testing "converts keys to kebab case"
-          (is (= {:some-key 123}
+          (is (= {"someKey" 123}
                 (<-json "{\"someKey\": 123}"))))
 
         (testing "preserves keys prefixed with an underscore"
-          (is (= {:_some-links 123}
+          (is (= {"_someLinks" 123}
                 (<-json "{\"_someLinks\": 123}")))))
 
       (testing "for ->json"
         (testing "returns a json string"
-          (is (= (multiline-str
-                   "{"
-                   "  \"key\" : 123"
-                   "}")
+          (is (= "{\"key\":123}"
                 (->json {:key 123}))))
 
-        (testing "converts keys to camel case"
-          (is (= (multiline-str
-                   "{"
-                   "  \"someKey\" : 123"
-                   "}")
+        (testing "keeps keys as provided"
+          (is (= "{\"some-key\":123}"
                 (->json {:some-key 123}))))
 
         (testing "preserves meta keys"
-          (is (= (multiline-str
-                   "{"
-                   "  \"_someKey\" : 123"
-                   "}")
-                (->json {:_some-key 123}))))
-
-        (testing "converts joda dates"
-          (is (= (multiline-str
-                   "{"
-                   "  \"key\" : \"2019-02-03T00:00:00.000Z\""
-                   "}")
-                (->json {:key (time/date-time 2019 2 3)}))))
-
-        (testing "converts java.time dates"
-          (let [date-time (ZonedDateTime/of 2019 2 3 0 0 0 0 ZoneOffset/UTC)]
-            (is (= (multiline-str
-                     "{"
-                     "  \"key\" : \"2019-02-03T00:00:00Z\""
-                     "}")
-                  (->json {:key date-time}))))))))
+          (is (= "{\"_some-key\":123}"
+                (->json {:_some-key 123})))))))
 
   (testing "uses specified encode key function when provided"
     (let [{:keys [->json]}
           (jason/new-json-coders
             {:encode-key-fn (jason/->encode-key-fn
                               {:standard-key-fn ->snake_case_string})})]
-      (is (= (multiline-str
-               "{"
-               "  \"some_key\" : 123"
-               "}")
+      (is (= "{\"some_key\":123}"
             (->json {:some-key 123})))
 
-      (is (= (multiline-str
-               "{"
-               "  \"_some_key\" : 123"
-               "}")
+      (is (= "{\"_some_key\":123}"
             (->json {:_some-key 123})))))
 
   (testing "uses specified decode key function when provided"
@@ -337,18 +285,9 @@
     (is (= {:some-key 123} (<-database-json "{\"some_key\": 123}")))
     (is (= {:_some-links 123} (<-database-json "{\"_some_links\": 123}")))
 
-    (is (= (multiline-str
-             "{"
-             "  \"key\" : 123"
-             "}")
+    (is (= "{\"key\":123}"
           (->database-json {:key 123})))
-    (is (= (multiline-str
-             "{"
-             "  \"some_key\" : 123"
-             "}")
+    (is (= "{\"some_key\":123}"
           (->database-json {:some-key 123})))
-    (is (= (multiline-str
-             "{"
-             "  \"_some_key\" : 123"
-             "}")
+    (is (= "{\"_some_key\":123}"
           (->database-json {:_some-key 123})))))

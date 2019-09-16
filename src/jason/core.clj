@@ -9,10 +9,7 @@
     [camel-snake-kebab.core
      :refer [->camelCaseString
              ->snake_case_string
-             ->kebab-case-keyword]])
-  (:import
-    [com.fasterxml.jackson.datatype.joda JodaModule]
-    [com.fasterxml.jackson.datatype.jsr310 JavaTimeModule]))
+             ->kebab-case-keyword]]))
 
 (def ^:dynamic *meta-prefix*
   "Meta key prefix used to detect and preserve meta fields. Defaults to '_'."
@@ -88,9 +85,8 @@
 (defn new-object-mapper
   "Constructs a Jackson `ObjectMapper`.
 
-  With no arguments, the returned object mapper uses the default encode / decode
-  key functions, includes support for both `org.joda.time` and `java.time`
-  objects and produces pretty JSON.
+  With no arguments, the returned object mapper encodes and decodes keys exactly
+  as provided, does not produce pretty JSON and includes no additional modules.
 
   The optional first parameter is a map of options. The following options are
   supported:
@@ -122,13 +118,7 @@
   JSON library, `jsonista`."
   ([] (new-object-mapper {}))
   ([options]
-    (jsonista/object-mapper
-      (merge
-        {:encode-key-fn (->encode-key-fn)
-         :decode-key-fn (->decode-key-fn)
-         :modules       [(JodaModule.) (JavaTimeModule.)]
-         :pretty        true}
-        options))))
+    (jsonista/object-mapper options)))
 
 (def ^:dynamic *default-object-mapper*
   "Default ObjectMapper instance used when none provided. Has the same

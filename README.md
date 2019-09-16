@@ -4,12 +4,20 @@ JSON encoding and decoding function construction with support for configurable
 key conversion.
 
 Supports:
-- conversion from kebab-case keywords to camel case JSON and back again by
-  default
-- correct key conversion for JSON payloads including metadata, 
-  (e.g., as in HAL), indicated by a (configurable) underscore prefix
 - configuration of all key conversions
-- serialisation of `org.joda.time` and `java.time` types
+- preservation of metadata fields (e.g., as in HAL) during conversion
+- additional Jackson modules for encoding / decoding various Java types
+
+Includes convenience coders for wire (i.e., service to service) JSON and
+database JSON:
+
+For wire JSON:
+- converts from kebab-case keywords to camelCase JSON and back again
+- includes serialisation of `org.joda.time` and `java.time` types
+
+For database JSON:
+- converts from kebab-case keywords to snake_case JSON and back again
+- includes serialisation of `org.joda.time` and `java.time` types
 
 ## Install
 
@@ -30,19 +38,19 @@ Add the following to your `project.clj` file:
 (require '[camel-snake-kebab.core :refer [->snake_case_string
                                           ->snake_case_keyword]])
 
-(defcoders wire)
+(defcoders standard)
 (defcoders db
   :encode-key-fn (jason/->encode-key-fn ->snake_case_string)
   :decode-key-fn (jason/->decode-key-fn ->snake_case_keyword))
 
-(->wire-json {:first-name "Jess"})
-;; => "{\"firstName\": \"Jess\"}"
+(->standard-json {:first-name "Jess"})
+;; => "{\"first-name\": \"Jess\"}"
 
 (->db-json {:first-name "Jess"})
 ;; => "{\"first_name\": \"Jess\"}"
 
-(<-wire-json "{\"firstName\": \"Jess\"}")
-;; => {:first-name "Jess"}
+(<-standard-json "{\"firstName\": \"Jess\"}")
+;; => {"firstName" "Jess"}
 
 (<-db-json "{\"first_name\": \"Jess\"}")
 ;; => {:first_name "Jess"}
