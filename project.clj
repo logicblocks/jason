@@ -9,9 +9,7 @@
   [[metosin/jsonista "0.2.2"]
    [com.fasterxml.jackson.datatype/jackson-datatype-joda "2.9.9"]
    [com.fasterxml.jackson.datatype/jackson-datatype-jsr310 "2.9.9"]
-   [camel-snake-kebab "672421b575737c5496b7ddcfb83cf150b0d0bc75"]]
-
-  :middleware [lein-git-down.plugin/inject-properties]
+   [camel-snake-kebab "0.4.1"]]
 
   :plugins [[lein-cloverage "1.0.13"]
             [lein-shell "0.5.0"]
@@ -21,8 +19,7 @@
             [lein-codox "0.10.7"]
             [lein-cljfmt "0.6.4"]
             [lein-kibit "0.1.6"]
-            [lein-bikeshed "0.5.1"]
-            [reifyhealth/lein-git-down "0.3.5"]]
+            [lein-bikeshed "0.5.1"]]
 
   :profiles {:shared {:dependencies
                       [[org.clojure/clojure "1.10.1"]
@@ -43,11 +40,6 @@
    :source-uri  "https://github.com/b-social/jason/blob/{version}/{filepath}#L{line}"}
 
   :cljfmt {:indents ^:replace {#".*" [[:inner 0]]}}
-
-  :git-down
-  {camel-snake-kebab {:coordinates clj-commons/camel-snake-kebab}}
-
-  :repositories [["public-github" {:url "git://github.com"}]]
 
   :deploy-repositories
   {"releases" {:url "https://repo.clojars.org" :creds :gpg}}
