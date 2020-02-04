@@ -126,3 +126,62 @@
   (testing "preserves keys prefixed with an underscore"
     (is (= {:_some-links 123}
           (convenience/<-wire-json "{\"_some_links\": 123}")))))
+
+(deftest ->open-banking-json
+  (testing "returns nil when nil provided"
+    (is (nil? (convenience/->open-banking-json nil))))
+
+  (testing "returns a json string"
+    (is (= (multiline-str
+             "{"
+             "  \"Key\" : 123"
+             "}")
+          (convenience/->open-banking-json {:key 123}))))
+
+  (testing "converts keys to camel case"
+    (is (= (multiline-str
+             "{"
+             "  \"SomeKey\" : 123"
+             "}")
+          (convenience/->open-banking-json {:some-key 123}))))
+
+  (testing "preserves meta keys"
+    (is (= (multiline-str
+             "{"
+             "  \"_SomeKey\" : 123"
+             "}")
+          (convenience/->open-banking-json {:_some-key 123}))))
+
+  (testing "converts joda dates"
+    (is (= (multiline-str
+             "{"
+             "  \"Key\" : \"2019-02-03T00:00:00.000Z\""
+             "}")
+          (convenience/->open-banking-json {:key (time/date-time 2019 2 3)}))))
+
+  (testing "converts java.time dates"
+    (let [date-time (ZonedDateTime/of 2019 2 3 0 0 0 0 ZoneOffset/UTC)]
+      (is (= (multiline-str
+               "{"
+               "  \"Key\" : \"2019-02-03T00:00:00Z\""
+               "}")
+            (convenience/->open-banking-json {:key date-time}))))))
+
+(deftest <-open-banking-json
+  (testing "returns nil when nil provided"
+    (is (nil? (convenience/<-open-banking-json nil))))
+
+  (testing "returns nil when empty string provided"
+    (is (nil? (convenience/<-open-banking-json ""))))
+
+  (testing "parses json"
+    (is (= {:key 123}
+          (convenience/<-open-banking-json "{\"Key\": 123}"))))
+
+  (testing "converts keys to kebab case"
+    (is (= {:some-key 123}
+          (convenience/<-open-banking-json "{\"SomeKey\": 123}"))))
+
+  (testing "preserves keys prefixed with an underscore"
+    (is (= {:_some-links 123}
+          (convenience/<-open-banking-json "{\"_SomeLinks\": 123}")))))

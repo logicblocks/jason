@@ -3,6 +3,7 @@
     [camel-snake-kebab.core
      :refer [->camelCaseString
              ->snake_case_string
+             ->PascalCaseString
              ->kebab-case-keyword]]
 
     [jason.core :refer [defcoders] :as jason])
@@ -13,7 +14,9 @@
   ->wire-json
   <-wire-json
   ->db-json
-  <-db-json)
+  <-db-json
+  ->open-banking-json
+  <-open-banking-json)
 
 (defcoders wire
   :encode-key-fn (jason/->encode-key-fn ->camelCaseString)
@@ -23,6 +26,12 @@
 
 (defcoders db
   :encode-key-fn (jason/->encode-key-fn ->snake_case_string)
+  :decode-key-fn (jason/->decode-key-fn ->kebab-case-keyword)
+  :modules [(JodaModule.) (JavaTimeModule.)]
+  :pretty true)
+
+(defcoders open-banking
+  :encode-key-fn (jason/->encode-key-fn ->PascalCaseString)
   :decode-key-fn (jason/->decode-key-fn ->kebab-case-keyword)
   :modules [(JodaModule.) (JavaTimeModule.)]
   :pretty true)
