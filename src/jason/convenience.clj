@@ -14,9 +14,7 @@
   ->wire-json
   <-wire-json
   ->db-json
-  <-db-json
-  ->open-banking-json
-  <-open-banking-json)
+  <-db-json)
 
 (defcoders wire
   :encode-key-fn (jason/->encode-key-fn ->camelCaseString)
@@ -26,12 +24,6 @@
 
 (defcoders db
   :encode-key-fn (jason/->encode-key-fn ->snake_case_string)
-  :decode-key-fn (jason/->decode-key-fn ->kebab-case-keyword)
-  :modules [(JodaModule.) (JavaTimeModule.)]
-  :pretty true)
-
-(defcoders open-banking
-  :encode-key-fn (jason/->encode-key-fn ->PascalCaseString)
   :decode-key-fn (jason/->decode-key-fn ->kebab-case-keyword)
   :modules [(JodaModule.) (JavaTimeModule.)]
   :pretty true)
