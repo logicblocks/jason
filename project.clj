@@ -1,6 +1,6 @@
-(defproject b-social/jason "0.1.6-SNAPSHOT"
+(defproject io.logicblocks/jason "1.0.0-RC1"
   :description "Factory functions around jsonista, mostly for key conversion."
-  :url "https://github.com/b-social/jason"
+  :url "https://github.com/logicblocks/jason"
 
   :license {:name "The MIT License"
             :url  "https://opensource.org/licenses/MIT"}
@@ -37,7 +37,7 @@
    :metadata    {:doc/format :markdown}
    :output-path "docs"
    :doc-paths ["docs"]
-   :source-uri  "https://github.com/b-social/jason/blob/{version}/{filepath}#L{line}"}
+   :source-uri  "https://github.com/logicblocks/jason/blob/{version}/{filepath}#L{line}"}
 
   :cljfmt {:indents ^:replace {#".*" [[:inner 0]]}}
 

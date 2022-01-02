@@ -24,12 +24,12 @@ For database JSON:
 Add the following to your `project.clj` file:
 
 ```clj
-[b-social/jason "0.1.5"]
+[io.logicblocks/jason "1.0.0"]
 ```
 
 ## Documentation
 
-* [API Docs](http://b-social.github.io/jason)
+* [API Docs](http://logicblocks.github.io/jason)
 
 ## Usage
 
@@ -56,12 +56,13 @@ Add the following to your `project.clj` file:
 ;; => {:first_name "Jess"}
 ```
 
-See the [Getting Started](https://b-social.github.io/jason/getting-started.html) 
+See the 
+[Getting Started](https://logicblocks.github.io/jason/getting-started.html) 
 guide for more details.
 
 ## License
 
-Copyright © 2018 B-Social Ltd.
+Copyright © 2022 LogicBlocks Maintainers
 
 Distributed under the terms of the 
 [MIT License](http://opensource.org/licenses/MIT).
