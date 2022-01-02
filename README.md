@@ -1,5 +1,10 @@
 # jason
 
+[![Clojars Project](https://img.shields.io/clojars/v/io.logicblocks/jason.svg)](https://clojars.org/io.logicblocks/jason)
+[![Clojars Downloads](https://img.shields.io/clojars/dt/io.logicblocks/jason.svg)](https://clojars.org/io.logicblocks/jason)
+[![GitHub Contributors](https://img.shields.io/github/contributors-anon/logicblocks/jason.svg)](https://github.com/logicblocks/jason/graphs/contributors)
+
+
 JSON encoding and decoding function construction with support for configurable 
 key conversion.
 
