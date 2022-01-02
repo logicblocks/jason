@@ -8,6 +8,8 @@ and this project adheres to
 
 
 ## [Unreleased]
+### Changed
+- Forked from b-social/jason.
 
 ## [0.1.5] — 2020-02-04
 
@@ -70,4 +72,4 @@ Released without _CHANGELOG.md_.
 [0.1.3]: https://github.com/b-social/jason/compare/0.1.2...0.1.3
 [0.1.4]: https://github.com/b-social/jason/compare/0.1.3...0.1.4
 [0.1.5]: https://github.com/b-social/jason/compare/0.1.4...0.1.5
-[Unreleased]: https://github.com/b-social/jason/compare/0.1.5...HEAD
+[Unreleased]: https://github.com/logicblocks/jason/compare/0.1.5...HEAD
