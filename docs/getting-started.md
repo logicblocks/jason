@@ -179,7 +179,6 @@ to service) and database JSON (e.g., for databases that support JSON types).
 
 The wire JSON coders:
 - convert from kebab-case keywords to camelCase JSON and back again
-- includes serialisation of `org.joda.time` and `java.time` types
 
 To use the wire JSON coders:
 
@@ -195,7 +194,6 @@ To use the wire JSON coders:
 
 The database JSON coders:
 - convert from kebab-case keywords to snake_case JSON and back again
-- includes serialisation of `org.joda.time` and `java.time` types
 
 To use the database JSON coders:
 

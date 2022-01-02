@@ -1,21 +1,21 @@
 (ns jason.core-test
   (:require
-    [clojure.test :refer :all]
+   [clojure.test :refer :all]
 
-    [clj-time.core :as time]
+   [clj-time.core :as time]
 
-    [camel-snake-kebab.core
-     :refer [->camelCaseString
-             ->snake_case_string
-             ->snake_case_keyword
-             ->kebab-case-keyword]]
+   [camel-snake-kebab.core
+    :refer [->camelCaseString
+            ->snake_case_string
+            ->snake_case_keyword
+            ->kebab-case-keyword]]
 
-    [jason.support :refer [multiline-str]]
+   [jason.support :refer [multiline-str]]
 
-    [jason.core :as jason])
+   [jason.core :as jason])
   (:import [java.time ZonedDateTime ZoneOffset]
-    [com.fasterxml.jackson.datatype.joda JodaModule]
-    [com.fasterxml.jackson.datatype.jsr310 JavaTimeModule]))
+           [com.fasterxml.jackson.datatype.joda JodaModule]
+           [com.fasterxml.jackson.datatype.jsr310 JavaTimeModule]))
 
 (deftest ->encode-key-fn
   (testing "converts to camel case string for standard keys by default"

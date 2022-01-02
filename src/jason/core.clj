@@ -2,14 +2,14 @@
   "JSON encoding and decoding function construction with support for
   configurable key conversion."
   (:require
-    [clojure.string :refer [starts-with?]]
+   [clojure.string :refer [starts-with?]]
 
-    [jsonista.core :as jsonista]
+   [jsonista.core :as jsonista]
 
-    [camel-snake-kebab.core
-     :refer [->camelCaseString
-             ->snake_case_string
-             ->kebab-case-keyword]]))
+   [camel-snake-kebab.core
+    :refer [->camelCaseString
+            ->snake_case_string
+            ->kebab-case-keyword]]))
 
 (def ^:dynamic *meta-prefix*
   "Meta key prefix used to detect and preserve meta fields. Defaults to '_'."
@@ -34,11 +34,11 @@
 (defn- ->key-fn
   ([default-key-fn] (->key-fn {} default-key-fn))
   ([options default-key-fn]
-    (let [standard-key-fn
-          (get options :standard-key-fn default-key-fn)
-          meta-key-fn
-          (get options :meta-key-fn (->meta-key-fn standard-key-fn))]
-      (if-metadata meta-key-fn standard-key-fn))))
+   (let [standard-key-fn
+         (get options :standard-key-fn default-key-fn)
+         meta-key-fn
+         (get options :meta-key-fn (->meta-key-fn standard-key-fn))]
+     (if-metadata meta-key-fn standard-key-fn))))
 
 (defn ->encode-key-fn
   "Constructs a function to encode JSON keys.
@@ -57,9 +57,9 @@
                            all meta handling."
   ([] (->encode-key-fn {}))
   ([fn-or-opts]
-    (->key-fn
-      (if (map? fn-or-opts) fn-or-opts {:standard-key-fn fn-or-opts})
-      ->camelCaseString)))
+   (->key-fn
+     (if (map? fn-or-opts) fn-or-opts {:standard-key-fn fn-or-opts})
+     ->camelCaseString)))
 
 (defn ->decode-key-fn
   "Constructs a function to decode JSON keys.
@@ -78,9 +78,9 @@
                            all meta handling."
   ([] (->decode-key-fn {}))
   ([fn-or-opts]
-    (->key-fn
-      (if (map? fn-or-opts) fn-or-opts {:standard-key-fn fn-or-opts})
-      ->kebab-case-keyword)))
+   (->key-fn
+     (if (map? fn-or-opts) fn-or-opts {:standard-key-fn fn-or-opts})
+     ->kebab-case-keyword)))
 
 (defn new-object-mapper
   "Constructs a Jackson `ObjectMapper`.
@@ -118,7 +118,7 @@
   JSON library, `jsonista`."
   ([] (new-object-mapper {}))
   ([options]
-    (jsonista/object-mapper options)))
+   (jsonista/object-mapper options)))
 
 (def ^:dynamic *default-object-mapper*
   "Default ObjectMapper instance used when none provided. Has the same
@@ -133,9 +133,9 @@
   The returned encoder returns nil on a nil value, otherwise JSON encodes it."
   ([] (new-json-encoder (new-object-mapper)))
   ([object-mapper]
-    (fn [value]
-      (when value
-        (jsonista/write-value-as-string value object-mapper)))))
+   (fn [value]
+     (when value
+       (jsonista/write-value-as-string value object-mapper)))))
 
 (defn new-json-decoder
   "Constructs a JSON decoder function. With no argument, uses the default
@@ -146,10 +146,10 @@
   JSON decodes it."
   ([] (new-json-decoder (new-object-mapper)))
   ([object-mapper]
-    (fn [value]
-      (when value
-        (when-not (and (string? value) (empty? value))
-          (jsonista/read-value value object-mapper))))))
+   (fn [value]
+     (when value
+       (when-not (and (string? value) (empty? value))
+         (jsonista/read-value value object-mapper))))))
 
 (defn new-json-coders
   "Constructs a pair of JSON encode / decode functions, at keys `:->json` and
@@ -160,9 +160,9 @@
   described in the documentation for [[new-object-mapper]]."
   ([] (new-json-coders {}))
   ([options]
-    (let [object-mapper (new-object-mapper options)]
-      {:->json (new-json-encoder object-mapper)
-       :<-json (new-json-decoder object-mapper)})))
+   (let [object-mapper (new-object-mapper options)]
+     {:->json (new-json-encoder object-mapper)
+      :<-json (new-json-decoder object-mapper)})))
 
 (defmacro defcoders
   "Defines a pair of JSON encode / decode functions in the current namespace

@@ -18,15 +18,15 @@
             [jonase/eastwood "0.3.11"]]
 
   :dependencies
-  [[metosin/jsonista "0.2.2"]
-   [com.fasterxml.jackson.datatype/jackson-datatype-joda "2.9.9"]
-   [com.fasterxml.jackson.datatype/jackson-datatype-jsr310 "2.9.9"]
-   [camel-snake-kebab "0.4.1"]]
+  [[metosin/jsonista "0.3.5"]
+   [camel-snake-kebab "0.4.2"]]
 
   :profiles
   {:shared
    {:dependencies
     [[org.clojure/clojure "1.10.3"]
+
+     [com.fasterxml.jackson.datatype/jackson-datatype-joda "2.13.0"]
 
      [clj-time "0.15.2"]
 

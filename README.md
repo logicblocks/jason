@@ -11,18 +11,15 @@ key conversion.
 Supports:
 - configuration of all key conversions
 - preservation of metadata fields (e.g., as in HAL) during conversion
-- additional Jackson modules for encoding / decoding various Java types
 
 Includes convenience coders for wire (i.e., service to service) JSON and
 database JSON:
 
 For wire JSON:
 - converts from kebab-case keywords to camelCase JSON and back again
-- includes serialisation of `org.joda.time` and `java.time` types
 
 For database JSON:
 - converts from kebab-case keywords to snake_case JSON and back again
-- includes serialisation of `org.joda.time` and `java.time` types
 
 ## Install
 
