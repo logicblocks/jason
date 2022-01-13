@@ -6,6 +6,45 @@
 
    [jason.convenience :as convenience]))
 
+(deftest ->json
+  (testing "returns nil when nil provided"
+    (is (nil? (convenience/->json nil))))
+
+  (testing "returns a json string"
+    (is (= (multiline-str
+             "{"
+             "  \"key\" : 123"
+             "}")
+          (convenience/->json {:key 123}))))
+
+  (testing "keeps keys as they are"
+    (is (= (multiline-str
+             "{"
+             "  \"foo-key\" : 123,"
+             "  \"bar_key\" : 123,"
+             "  \"bazKey\" : 123"
+             "}")
+          (convenience/->json {:foo-key 123
+                               :bar_key 123
+                               :bazKey 123})))))
+
+(deftest <-json
+  (testing "returns nil when nil provided"
+    (is (nil? (convenience/<-json nil))))
+
+  (testing "returns nil when empty string provided"
+    (is (nil? (convenience/<-json ""))))
+
+  (testing "parses json"
+    (is (= {:key 123}
+          (convenience/<-json "{\"key\": 123}"))))
+
+  (testing "leaves keys as they are"
+    (is (= {:foo-key 123
+            :bar_key 123
+            :bazKey 123}
+          (convenience/<-json "{\"foo-key\": 123, \"bar_key\": 123, \"bazKey\": 123}")))))
+
 (deftest ->wire-json
   (testing "returns nil when nil provided"
     (is (nil? (convenience/->wire-json nil))))
