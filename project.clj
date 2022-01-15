@@ -5,7 +5,8 @@
   :license {:name "The MIT License"
             :url  "https://opensource.org/licenses/MIT"}
 
-  :plugins [[lein-cloverage "1.1.2"]
+  :plugins [[fipp "0.6.24"]
+            [lein-cloverage "1.1.2"]
             [lein-shell "0.5.0"]
             [lein-ancient "0.6.15"]
             [lein-changelog "0.3.2"]
