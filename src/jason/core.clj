@@ -165,13 +165,29 @@
       :<-json (new-json-decoder object-mapper)})))
 
 (defmacro defcoders
-  "Defines a pair of JSON encode / decode functions in the current namespace
-  using the provided type, `-><type>-json` and `<-<type>-json`.
+  "Defines a pair of JSON encode / decode functions in the current namespace.
 
-  The key-value arguments are the same as the options exposed on
-  [[new-json-coders]] allowing full control over the generated functions."
-  [t & {:as options}]
-  `(let [{->json# :->json <-json# :<-json}
-         (new-json-coders ~options)]
-     (def ~(symbol (str "->" (name t) "-json")) ->json#)
-     (def ~(symbol (str "<-" (name t) "-json")) <-json#)))
+  If a symbol is passed as the first argument, it is used as the \"type\" of
+  the coders such that the defined functions have the names `-><type>-json` and
+  `<-<type>-json`.
+
+  If no symbol is passed, the defined coder functions have the names `->json`
+  and `<-json`.
+
+  In addition to a type symbol, a sequence of key-value arguments can be
+  provided, supporting the same options as exposed on [[new-json-coders]]
+  allowing full control over the generated functions."
+  ([& args]
+   (let [coder-type-in-args? (odd? (count args))
+         coder-type (when coder-type-in-args? (first args))
+         {:as options} (if coder-type-in-args? (drop 1 args) args)
+         coder-symbol (fn [prefix]
+                        (symbol (if coder-type-in-args?
+                                  (str (name prefix) (name coder-type) "-json")
+                                  (str (name prefix) "json"))))
+         encoder-symbol (coder-symbol :->)
+         decoder-symbol (coder-symbol :<-)]
+     `(let [{->json# :->json <-json# :<-json}
+            (new-json-coders ~options)]
+        (def ~encoder-symbol ->json#)
+        (def ~decoder-symbol <-json#)))))

@@ -9,16 +9,17 @@
    [jason.core :refer [defcoders] :as jason]))
 
 (declare
+  ->json
+  <-json
   ->wire-json
   <-wire-json
   ->db-json
   <-db-json)
 
-(let [coders (jason/new-json-coders
-               {:decode-key-fn (jason/->decode-key-fn keyword)
-                :pretty        true})]
-  (def <-json (:<-json coders))
-  (def ->json (:->json coders)))
+(defcoders
+  :encode-key-fn (jason/->encode-key-fn name)
+  :decode-key-fn (jason/->decode-key-fn keyword)
+  :pretty true)
 
 (defcoders wire
   :encode-key-fn (jason/->encode-key-fn ->camelCaseString)

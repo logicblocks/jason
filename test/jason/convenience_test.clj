@@ -43,7 +43,8 @@
     (is (= {:foo-key 123
             :bar_key 123
             :bazKey 123}
-          (convenience/<-json "{\"foo-key\": 123, \"bar_key\": 123, \"bazKey\": 123}")))))
+          (convenience/<-json
+            "{\"foo-key\": 123, \"bar_key\": 123, \"bazKey\": 123}")))))
 
 (deftest ->wire-json
   (testing "returns nil when nil provided"
