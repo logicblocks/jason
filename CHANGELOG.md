@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.0] — 2023-06-12
+
 ### Added
 
 - `->json` and `<-json` convenience functions that don't modify object keys at
@@ -124,4 +126,5 @@ Released without _CHANGELOG.md_.
 
 [0.1.5]: https://github.com/b-social/jason/compare/0.1.4...0.1.5
 
-[Unreleased]: https://github.com/logicblocks/jason/compare/0.1.5...HEAD
+[1.0.0]: https://github.com/logicblocks/jason/compare/0.1.5...1.0.0
+[Unreleased]: https://github.com/logicblocks/jason/compare/1.0.0...HEAD
