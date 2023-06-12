@@ -64,7 +64,7 @@ guide for more details.
 
 ## License
 
-Copyright © 2022 LogicBlocks Maintainers
+Copyright &copy; 2023 LogicBlocks Maintainers
 
 Distributed under the terms of the 
 [MIT License](http://opensource.org/licenses/MIT).
