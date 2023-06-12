@@ -8,13 +8,36 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- `->json` and `<-json` convenience functions that don't modify object keys at
+  all.
+
 ### Changed
 
 - Forked from b-social/jason.
 
+### Removed
+
+- `->open-banking-json` and `<-open-banking-json` convenience functions since
+  they are too specific for this library.
+- The default support for Joda date and time types has been removed due to the
+  introduction of `java.time`. Support can still be added by consumers of this
+  library when required.
+
 ## [0.1.5] — 2020-02-04
 
+### Added
+
+- `->open-banking-json` and `<-open-banking-json` convenience functions for
+  handling Open Banking specific casings.
+
 ## [0.1.4] — 2019-12-04
+
+### Changed
+
+- The `camel-snake-kebab` dependency has been switched to a release version
+  rather than being pinned to a commit.
 
 ## [0.1.3] — 2019-09-16
 
