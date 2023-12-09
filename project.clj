@@ -18,7 +18,7 @@
             [jonase/eastwood "1.4.0"]]
 
   :dependencies
-  [[metosin/jsonista "0.3.7"]
+  [[metosin/jsonista "0.3.8"]
    [camel-snake-kebab "0.4.3"]]
 
   :profiles
@@ -27,11 +27,11 @@
    {:dependencies
     [[org.clojure/clojure "1.11.1"]
 
-     [com.fasterxml.jackson.datatype/jackson-datatype-joda "2.15.2"]
+     [com.fasterxml.jackson.datatype/jackson-datatype-joda "2.16.0"]
 
      [clj-time "0.15.2"]
 
-     [nrepl "1.0.0"]
+     [nrepl "1.1.0"]
      [eftest "0.6.0"]]}
 
    :dev
