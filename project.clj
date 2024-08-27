@@ -1,4 +1,4 @@
-(defproject io.logicblocks/jason "1.0.1-RC4"
+(defproject io.logicblocks/jason "1.0.1-RC5"
   :description "Factory functions around jsonista, mostly for key conversion."
   :url "https://github.com/logicblocks/jason"
 
